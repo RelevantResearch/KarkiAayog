@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { Calendar } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { Calendar, Link } from 'lucide-react';
 
 type TimelineEvent = { year: string; title: string; description: string };
 

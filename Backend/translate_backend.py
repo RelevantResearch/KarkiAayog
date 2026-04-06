@@ -13,7 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model_name = "facebook/nllb-200-distilled-600M"
+model_name = "Helsinki-NLP/opus-mt-en-ne"
+# model_name = "facebook/nllb-200-distilled-600M"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name, torch_dtype=torch.float16)
 model.eval()

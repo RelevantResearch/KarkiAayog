@@ -61,15 +61,6 @@ export function useSearchIndex(locale: string) {
     return () => { cancelled = true; };
   }, [locale]);
 
-  /**
-   * Search the index for `term`.
-   * Returns up to `limit` matches (default 50).
-   *
-   * Strategy:
-   *   - Splits `term` into tokens
-   *   - An entry matches if ALL tokens appear somewhere in its text (case-insensitive)
-   *   - Returns { id, preview } with the preview trimmed around the first match
-   */
   const search = useCallback(
     (term: string, limit = 50): SearchMatch[] => {
       if (!term.trim() || !index.length) return [];
