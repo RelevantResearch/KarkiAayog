@@ -1,0 +1,13 @@
+{
+    "title": "Search Nepali Documents",
+    "subtitle": "Find information quickly with our intelligent search",
+    "englishInputLabel": "Type in English",
+    "englishInputPlaceholder": "Type for automatic translation...",
+    "translating": "Translating...",
+    "searchLabel": "Search Query",
+    "nepaliSearchLabel": "Translated Nepali Text (editable)",
+    "searchPlaceholder": "Enter search term...",
+    "searchButton": "Search",
+    "searching": "Searching...",
+    "noResults": "No results found. Try a different search term."
+  }

@@ -1,0 +1,17 @@
+{
+  "title": "About NepalDocs",
+  "subtitle": "Your gateway to exploring Nepali documents",
+  "missionTitle": "Our Mission",
+  "missionP1": "NepalDocs is dedicated to making Nepali documents accessible and searchable for everyone...",
+  "missionP2": "With advanced search capabilities and automatic translation features, we aim to bridge the gap between languages...",
+  "featuresTitle": "Key Features",
+  "ctaTitle": "Get Started Today",
+  "ctaBody": "Start exploring Nepali documents with our powerful search tools.",
+  "ctaButton": "Go to Search",
+  "features": [
+    {"title": "Smart Search", "description": "Intelligent search that highlights matches and shows relevant results instantly."},
+    {"title": "Auto Translation", "description": "Type in English and get automatic translation to Nepali as you type."},
+    {"title": "Rich Documents", "description": "Browse beautifully formatted documents with text, images, tables, and lists."},
+    {"title": "Fast & Responsive", "description": "Lightning-fast search with smooth animations and mobile-friendly design."}
+  ]
+}

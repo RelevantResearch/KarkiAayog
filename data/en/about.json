@@ -1,0 +1,32 @@
+{
+  "title": "About This Website",
+  "intro": "This website is a digital version of the Karki Commission Report  the official inquiry into the events of Bhadra 23 and 24, 2082 BS. The Commission was formed by government decision on 2082/06/05 to investigate the protests, violence, deaths, and widespread destruction that led to the dissolution of both the government and the House of Representatives. This platform presents the full report in a structured, searchable format to make it accessible to everyone.",
+
+  "visionTitle": "The Vision",
+  "visionBody": "In an era where information moves at the speed of a scroll, massive physical reports often become inaccessible to the very people they affect. This platform was built to ensure that the findings of the 2082 Inquiry Commission do not remain buried in paper archives. We believe that transparency is only effective when it is accessible, searchable, and permanent.",
+
+  "whyTitle": "Why This Website Exists",
+  "whyP1": "The \"Gen-Z Uprising\" was a movement defined by digital connectivity. It began on social media, was organized through messaging apps, and was documented by thousands of smartphones. It is only fitting that the official history of this movement lives in a digital-first environment.",
+  "whyP2": "This site serves as a Living Archive  a place where the transition from a fractured past to a transparent future is documented for every citizen to see.",
+
+  "backgroundTitle": "Background",
+  "backgroundP1": "On Bhadra 23, 2082, protests began at Maitighar, Kathmandu. The immediate trigger was the Nepal Government's decision to ban social media, but the root causes were deeper  years of corruption, poor governance, rising unemployment, and inequality. When protesters attempted to reach the Parliament building, police used force, resulting in 17 deaths on the day and 12 more succumbing to injuries later.",
+  "backgroundP2": "On Bhadra 24, violence spread across the Kathmandu Valley and the country. Government offices, police stations, private property, and commercial establishments were targeted in incidents of arson, vandalism, theft, and looting. Three police officers were also killed in protester attacks.",
+  "backgroundP3": "In total, 76 people died across the two days, over 2,522 people were injured, and physical damage is estimated at approximately 85 billion NPR.",
+
+  "commissionTitle": "About the Commission",
+  "commissionP1": "The Inquiry Commission was formed on 2082/06/05 and began work on 2082/06/09. Initially given a three-month term, it received three extensions due to the scale of the work. The Commission conducted field visits across 13 heavily affected districts, collected statements from the injured and families of the deceased, reviewed footage and BTS reports, and took testimonies from officials who were in charge at the time. Incident reports were also requested from Chief District Officers of 18 districts.",
+  "commissionP2": "The Commission concluded that the immediate cause of the Bhadra 23 protest was the social media ban, while the root causes were deep-seated corruption and poor governance. The report includes findings, recommendations, and an implementation action plan to prevent future occurrences.",
+
+  "languageTitle": "Language Support",
+  "languageBody": "To make the report accessible to as many readers as possible, this website offers:",
+  "languageItems": [
+    "English Version – AI-translated for international readers and wider understanding",
+    "Nepali Version – Preserving the original language and native context",
+    "English → Nepali search – Type in English, search the Nepali document",
+    "Nepali → Nepali search – Search directly in Devanagari script"
+  ],
+
+  "disclaimerTitle": "Disclaimer",
+  "disclaimerBody": "The English version of this document has been translated using AI technology. Some inaccuracies may be present. Users are encouraged to refer to the Nepali original for official and verified information."
+}

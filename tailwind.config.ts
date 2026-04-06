@@ -20,6 +20,7 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        navbar: "hsl(var(--navbar-bg))",
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

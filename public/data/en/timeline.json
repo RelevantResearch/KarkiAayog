@@ -1,0 +1,39 @@
+{
+    "title": "Project Timeline",
+    "subtitle": "Our journey to make Nepali documents accessible",
+    "ctaTitle": "Join Our Journey",
+    "ctaBody": "Be part of our mission to make Nepali information more accessible.",
+    "ctaButton": "Start Searching",
+    "events": [
+        {
+            "year": "2024 Q1",
+            "title": "Project Launch",
+            "description": "NepalDocs was launched with the vision of making Nepali documents searchable and accessible."
+        },
+        {
+            "year": "2024 Q2",
+            "title": "Translation Feature Added",
+            "description": "Introduced automatic English to Nepali translation for seamless searching."
+        },
+        {
+            "year": "2024 Q3",
+            "title": "Document Viewer Enhanced",
+            "description": "Added support for rich content including images, tables, and formatted text with highlighting."
+        },
+        {
+            "year": "2024 Q4",
+            "title": "Mobile Optimization",
+            "description": "Fully optimized the platform for mobile devices with responsive design and touch-friendly interface."
+        },
+        {
+            "year": "2025 Q1",
+            "title": "Dark Mode & Accessibility",
+            "description": "Implemented dark mode and enhanced accessibility features for better user experience."
+        },
+        {
+            "year": "Coming Soon",
+            "title": "AI-Powered Search",
+            "description": "Planning to introduce AI-powered semantic search for more accurate and context-aware results."
+        }
+    ]
+}

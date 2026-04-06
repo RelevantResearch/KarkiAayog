@@ -1,0 +1,227 @@
+[
+    {
+        "type": "h1",
+        "content": "Nepal's Constitution and History"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is an independent and sovereign nation located in South Asia. It was once the world's only Hindu kingdom but is now a secular republic. The capital of Nepal is Kathmandu and the official language is Nepali."
+    },
+    {
+        "type": "h2",
+        "content": "Nepal's Geography and Nature"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is a geographically diverse country. It is home to the world's highest peak, Mount Everest (Sagarmatha), which stands at 8,848.86 metres. Nepal has regions of mountains, hills, and the Terai plains."
+    },
+    {
+        "type": "h3",
+        "content": "Major Mountain Ranges"
+    },
+    {
+        "type": "list",
+        "content": [
+            "Sagarmatha (Everest) – highest peak in the world",
+            "Kangchenjunga – third highest peak in the world",
+            "Lhotse – fourth highest peak in the world",
+            "Makalu – fifth highest peak in the world",
+            "Cho Oyu – sixth highest peak in the world",
+            "Dhaulagiri – seventh highest peak in the world",
+            "Manaslu – eighth highest peak in the world",
+            "Annapurna – tenth highest peak in the world"
+        ]
+    },
+    {
+        "type": "h2",
+        "content": "Nepal's Culture and Traditions"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is a multi-ethnic, multilingual, and multicultural country. More than 125 ethnic groups and 123 languages are spoken here. The main religions of Nepal are Hinduism, Buddhism, Islam, and Kirat Dharma."
+    },
+    {
+        "type": "h3",
+        "content": "Major Festivals"
+    },
+    {
+        "type": "list",
+        "content": [
+            "Dashain – the biggest festival of Nepal",
+            "Tihar – the festival of lights",
+            "Chhath Parva – the main festival of the Terai",
+            "Losar – Tibetan New Year",
+            "Holi – the festival of colours",
+            "Buddha Jayanti – Lord Buddha's birthday",
+            "Eid – festival of the Muslim community"
+        ]
+    },
+    {
+        "type": "h2",
+        "content": "Nepal's Economy and Development"
+    },
+    {
+        "type": "p",
+        "content": "Nepal's economy is mainly dependent on agriculture, tourism, and remittances. About 60% of the population is engaged in agriculture. The tourism industry is also an important pillar of Nepal's economy."
+    },
+    {
+        "type": "h3",
+        "content": "Major Industries"
+    },
+    {
+        "type": "table",
+        "headers": [
+            "Industry",
+            "Contribution (%)",
+            "Employment"
+        ],
+        "rows": [
+            [
+                "Agriculture",
+                "27%",
+                "6 million"
+            ],
+            [
+                "Tourism",
+                "7.5%",
+                "1 million"
+            ],
+            [
+                "Construction",
+                "6%",
+                "500,000"
+            ],
+            [
+                "Services",
+                "55%",
+                "2 million"
+            ],
+            [
+                "Manufacturing",
+                "4.5%",
+                "300,000"
+            ]
+        ]
+    },
+    {
+        "type": "h2",
+        "content": "Education and Health"
+    },
+    {
+        "type": "p",
+        "content": "The education sector in Nepal is continuously improving. The literacy rate has risen to 67.9%. Access to healthcare is also increasing, but much more improvement is still needed."
+    },
+    {
+        "type": "h4",
+        "content": "Major Universities"
+    },
+    {
+        "type": "list",
+        "content": [
+            "Tribhuvan University – Nepal's oldest university",
+            "Kathmandu University – leading private sector university",
+            "Pokhara University – leading university of the western region",
+            "Purbanchal University – leading university of eastern Nepal"
+        ]
+    },
+    {
+        "type": "image",
+        "content": "https://images.pexels.com/photos/1647962/pexels-photo-1647962.jpeg",
+        "alt": "Beautiful scenery of Nepal",
+        "caption": "Nepal's natural beauty – Himalayas and greenery"
+    },
+    {
+        "type": "h2",
+        "content": "Nepal's Politics and Administration"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is a federal democratic republic. It has a parliamentary system in which the President is the head of state and the Prime Minister is the head of government. Nepal is divided into seven provinces."
+    },
+    {
+        "type": "h3",
+        "content": "Seven Provinces"
+    },
+    {
+        "type": "table",
+        "headers": [
+            "Province",
+            "Capital",
+            "Population (estimated)"
+        ],
+        "rows": [
+            [
+                "Koshi Province",
+                "Biratnagar",
+                "4.6 million"
+            ],
+            [
+                "Madhesh Province",
+                "Janakpurdham",
+                "6.1 million"
+            ],
+            [
+                "Bagmati Province",
+                "Hetauda",
+                "6.1 million"
+            ],
+            [
+                "Gandaki Province",
+                "Pokhara",
+                "2.5 million"
+            ],
+            [
+                "Lumbini Province",
+                "Butwal",
+                "5.2 million"
+            ],
+            [
+                "Karnali Province",
+                "Surkhet",
+                "1.7 million"
+            ],
+            [
+                "Sudurpashchim Province",
+                "Godawari",
+                "2.7 million"
+            ]
+        ]
+    },
+    {
+        "type": "h2",
+        "content": "Tourism and World Heritage"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is world-famous for tourism. It has four UNESCO World Heritage Sites – Kathmandu Valley, Lumbini, Chitwan National Park, and Sagarmatha National Park."
+    },
+    {
+        "type": "h3",
+        "content": "Major Tourist Destinations"
+    },
+    {
+        "type": "list",
+        "content": [
+            "Kathmandu – the capital city and cultural hub",
+            "Pokhara – centre for Phewa Lake and adventure sports",
+            "Lumbini – birthplace of Lord Buddha",
+            "Chitwan – destination for wildlife and nature lovers",
+            "Nagarkot – best spot to view Everest",
+            "Mustang – Tibetan culture and tradition"
+        ]
+    },
+    {
+        "type": "image",
+        "content": "https://images.pexels.com/photos/66869/pexels-photo-66869.jpeg",
+        "alt": "Phewa Lake in Pokhara",
+        "caption": "Pokhara's beautiful Phewa Lake – Nepal's major tourist destination"
+    },
+    {
+        "type": "h2",
+        "content": "Conclusion"
+    },
+    {
+        "type": "p",
+        "content": "Nepal is a country full of natural beauty, cultural diversity, and historical significance. Its potential for development is immense, and the hard work and dedication of the Nepali people continue to propel the country forward. Nepal is a symbol of peace and goodwill in the world."
+    }
+]
