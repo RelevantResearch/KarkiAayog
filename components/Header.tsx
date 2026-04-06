@@ -162,10 +162,11 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Brand */}
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-orange-600">
-              {t('header.brand')}
-            </span>
-          </Link>
+  <span className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-orange-600">
+    <span className="hidden sm:inline">{t('header.brand')}</span> 
+    <span className="inline sm:hidden">Karki Aayog</span>
+  </span>
+</Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center space-x-6">
