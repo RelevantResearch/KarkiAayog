@@ -13,6 +13,34 @@ const inter = Inter({ subsets: ['latin'] });
 
 
 
+export const metadata = {
+  title: 'Karki Commission Aayog',
+  description: 'Digital version of the Karki Commission Report - full report, timeline, and insights.',
+  keywords: ['Karki Commission', 'Nepal', 'Government Report', 'Bhadra 23-24, 2082 BS', 'Gen-Z', 'Sept. 23 and 24', 'September 23 and 24', 'Karki Aayog' ],
+  openGraph: {
+    title: 'Karki Commission Aayog',
+    description: 'Digital version of the Karki Commission Report',
+    url: 'https://karkiaayog.tathyaraanka.com/',
+    siteName: 'Karki Commission Aayog',
+    images: [
+      {
+        url: 'public/images/protest.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Karki Commission Aayog'
+      }
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Karki Commission Aayog',
+    description: 'Digital version of the Karki Commission Report',
+    images: ['/images/impact.png'],
+  },
+}
+
 export default async function LocaleLayout({
   children,
   params,
