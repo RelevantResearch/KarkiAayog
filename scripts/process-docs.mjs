@@ -24,7 +24,7 @@ import { fileURLToPath } from 'url';
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT      = '/home/apocalypse/Freelance/KarkiAayog';          // project root
+const ROOT      = '/var/www/Freelance/KarkiAayog';          // project root
 
 const LOCALES    = ['en', 'ne'];                  // ← add/remove locales here
 const SOURCE_DIR = join(ROOT, 'data');            // ← where document.json lives now
