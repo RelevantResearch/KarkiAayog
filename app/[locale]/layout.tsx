@@ -14,32 +14,76 @@ const inter = Inter({ subsets: ['latin'] });
 
 
 export const metadata = {
-  title: 'Karki Commission Aayog',
-  description: 'Digital version of the Karki Commission Report - full report, timeline, and insights.',
-  keywords: ['Karki Commission', 'Nepal', 'Government Report', 'Bhadra 23-24, 2082 BS', 'Gen-Z', 'Sept. 23 and 24', 'September 23 and 24', 'Karki Aayog' ],
+  metadataBase: new URL('https://karkiaayog.tathyaraanka.com'),
+
+  title: {
+    default: 'Karki Commission Report 2082 (Bhadra 23–24) – Full Timeline & Findings',
+    template: '%s | Karki Aayog Nepal',
+  },
+
+  description:
+    'Explore the complete Karki Commission (Aayog) Report of Nepal based on the Bhadra 23–24, 2082 BS events. Read full findings, timeline, investigation details, and official insights in a structured digital format.',
+
+  keywords: [
+    'Karki Aayog',
+    'Karki Commission Nepal',
+    'Karki Aayog Report 2082',
+    'Bhadra 23 24 Nepal incident',
+    'Nepal investigation report',
+    'Karki report full text',
+    'Nepal protest report 2082',
+    'Karki commission findings',
+    'Nepal government report 2082',
+    'आयोग प्रतिवेदन',
+    'कार्की आयोग',
+    'नेपाल सरकारी रिपोर्ट',
+  ],
+
+  alternates: {
+    canonical: 'https://karkiaayog.tathyaraanka.com/',
+    languages: {
+      en: '/en',
+      ne: '/ne',
+    },
+  },
+
   openGraph: {
-    title: 'Karki Commission Aayog',
-    description: 'Digital version of the Karki Commission Report',
+    title: 'Karki Commission Report 2082 – Full Timeline & Findings',
+    description:
+      'Read the complete Karki Aayog report of Nepal, including timeline of Bhadra 23–24 events, key findings, and official investigation insights.',
     url: 'https://karkiaayog.tathyaraanka.com/',
-    siteName: 'Karki Commission Aayog',
+    siteName: 'Karki Aayog Nepal',
     images: [
       {
-        url: 'public/images/protest.jpeg',
+        url: '/images/protest.jpeg',
         width: 1200,
         height: 630,
-        alt: 'Karki Commission Aayog'
-      }
+        alt: 'Karki Commission Report Nepal Protest Scene',
+      },
     ],
     locale: 'en_US',
     type: 'website',
   },
+
   twitter: {
     card: 'summary_large_image',
-    title: 'Karki Commission Aayog',
-    description: 'Digital version of the Karki Commission Report',
+    title: 'Karki Commission Report 2082 – Full Findings & Timeline',
+    description:
+      'Full digital version of the Karki Aayog report with timeline, findings, and insights from Nepal.',
     images: ['/images/impact.png'],
   },
-}
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
 
 export default async function LocaleLayout({
   children,
@@ -55,7 +99,7 @@ export default async function LocaleLayout({
   }
 
   const messages = await loadLocaleMessages(locale);
-  
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
@@ -69,11 +113,11 @@ export default async function LocaleLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
         {locale === 'ne' && (
-  <>
-    <Script src="/pramukhime/pramukhime.js" strategy="beforeInteractive" />
-    <Script src="/pramukhime/pramukhindic.js" strategy="beforeInteractive" />
-  </>
-)}
+          <>
+            <Script src="/pramukhime/pramukhime.js" strategy="beforeInteractive" />
+            <Script src="/pramukhime/pramukhindic.js" strategy="beforeInteractive" />
+          </>
+        )}
       </body>
     </html>
   );

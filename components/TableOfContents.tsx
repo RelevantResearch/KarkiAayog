@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { DocumentSection } from '@/hooks/useDocumentChunks';
 import { useLocale } from 'next-intl';
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 type HeadingType = 'h1' | 'h2' | 'h3' | 'h4';
 
@@ -20,14 +18,13 @@ interface TableOfContentsProps {
   sections: DocumentSection[];
   activeMatchId?: string | null;
   onNavigate: (sectionId: string) => void;
+  scrollable?: boolean;
+  maxHeight?: string;
 }
-
-// ── Build nested TOC tree ─────────────────────────────────────────────────────
 
 function buildTocTree(sections: DocumentSection[]): TocEntry[] {
   const headingTypes: HeadingType[] = ['h1', 'h2', 'h3', 'h4'];
   const levelOf: Record<HeadingType, number> = { h1: 1, h2: 2, h3: 3, h4: 4 };
-
   const roots: TocEntry[] = [];
   const stack: TocEntry[] = [];
 
@@ -53,8 +50,6 @@ function buildTocTree(sections: DocumentSection[]): TocEntry[] {
   return roots;
 }
 
-// ── Indent / size maps ────────────────────────────────────────────────────────
-
 const INDENT: Record<HeadingType, string> = {
   h1: 'pl-0',
   h2: 'pl-4',
@@ -68,8 +63,6 @@ const FONT_SIZE: Record<HeadingType, string> = {
   h3: 'text-xs font-normal text-muted-foreground',
   h4: 'text-xs font-normal text-muted-foreground/70',
 };
-
-// ── TocNode (recursive) ───────────────────────────────────────────────────────
 
 function TocNode({
   entry,
@@ -95,7 +88,7 @@ function TocNode({
           'group flex items-center gap-1 rounded-md py-1 pr-2 cursor-pointer transition-all duration-150 select-none',
           INDENT[entry.type],
           isActive
-            ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+            ? 'bg-orange-100 dark:bg-orange-900/30'
             : 'hover:bg-muted/60',
         ].join(' ')}
       >
@@ -104,23 +97,25 @@ function TocNode({
           className={[
             'flex-shrink-0 w-4 h-4 flex items-center justify-center rounded transition-colors',
             hasChildren
-              ? 'text-primary hover:text-foreground'
+              ? 'text-muted-foreground hover:text-foreground'
               : 'text-transparent pointer-events-none',
           ].join(' ')}
           aria-label={isExpanded ? 'Collapse' : 'Expand'}
           tabIndex={hasChildren ? 0 : -1}
         >
           {hasChildren ? (
-            isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />
+            isExpanded
+              ? <ChevronDown className="w-3 h-3" />
+              : <ChevronRight className="w-3 h-3" />
           ) : (
-            <span className="w-1 h-1 rounded-full bg-primary block" />
+            <span className="w-1 h-1 rounded-full bg-muted-foreground/40 block" />
           )}
         </button>
 
         <span
           onClick={() => onNavigate(entry.id)}
           className={[
-            'flex-1 leading-snug py-0.5 truncate transition-colors',
+            'flex-1 leading-snug py-0.5 truncate transition-colors cursor-pointer',
             FONT_SIZE[entry.type],
             isActive ? 'text-orange-600 dark:text-orange-400' : '',
           ].join(' ')}
@@ -148,14 +143,13 @@ function TocNode({
   );
 }
 
-// ── TableOfContents ───────────────────────────────────────────────────────────
-
 export default function TableOfContents({
   sections,
   activeMatchId,
   onNavigate,
+  scrollable = false,
+  maxHeight = 'calc(100vh - 8rem)',
 }: TableOfContentsProps) {
-  const [isOpen, setIsOpen] = useState(true);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
   const locale = useLocale();
   const tree = useMemo(() => buildTocTree(sections), [sections]);
@@ -191,80 +185,35 @@ export default function TableOfContents({
   if (tree.length === 0) return null;
 
   return (
-    <div className="max-w-4xl mx-auto mb-4">
-      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+    // h-full so it fills whatever container it's placed in (drawer or aside)
+    <div className="flex flex-col h-full">
 
-        {/* ── Header ─────────────────────────────────────────────────────── */}
-        <button
-          onClick={() => setIsOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-5 py-3 hover:bg-muted/40 transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-primary">
-              {locale === "ne" ? "सामग्री सूची" : "Table of Contents"}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              ({tree.length}{" "}
-              {locale === "ne"
-                ? tree.length === 1
-                  ? "भाग"
-                  : "भागहरू"
-                : tree.length === 1
-                  ? "section"
-                  : "sections"})
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {isOpen && (
-              <>
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    expandAll();
-                  }}
-                  className="text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-muted transition-colors"
-                >
-                  {locale === "ne" ? "सबै विस्तार गर्नुहोस्" : "Expand all"}
-                </span>
-
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    collapseAll();
-                  }}
-                  className="text-xs text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-muted transition-colors"
-                >
-                  {locale === "ne" ? "सबै संक्षेप गर्नुहोस्" : "Collapse all"}
-                </span>
-              </>
-            )}
-
-            <ChevronDown
-              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-180" : ""
-                }`}
-            />
-          </div>
-        </button>
-
-        {/* ── Tree ───────────────────────────────────────────────────────── */}
-        {isOpen && (
-          <nav className="px-3 pb-3 pt-1 h-full overflow-y-auto border-t border-border">
-            <ul className="space-y-0.5">
-              {tree.map((entry) => (
-                <TocNode
-                  key={entry.id}
-                  entry={entry}
-                  activeSectionId={activeSectionId}
-                  expandedIds={expandedIds}
-                  onToggle={handleToggle}
-                  onNavigate={handleNavigate}
-                />
-              ))}
-            </ul>
-          </nav>
-        )}
+      {/* Header — never scrolls */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
+        <span className="text-sm font-semibold text-foreground">
+          {locale === 'ne' ? 'सामग्री सूची' : 'Table of contents'}
+        </span>
       </div>
+
+      {/* Tree — scrolls independently */}
+      <nav
+        className="px-3 py-2 overflow-y-auto min-h-0 flex-1"
+        // maxHeight only used for the aside (desktop sidebar); drawer relies on flex-1
+        style={scrollable && maxHeight !== '100%' ? { maxHeight } : undefined}
+      >
+        <ul className="space-y-0.5">
+          {tree.map((entry) => (
+            <TocNode
+              key={entry.id}
+              entry={entry}
+              activeSectionId={activeSectionId}
+              expandedIds={expandedIds}
+              onToggle={handleToggle}
+              onNavigate={handleNavigate}
+            />
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 }
