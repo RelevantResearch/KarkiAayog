@@ -380,10 +380,12 @@ export default function DocumentViewer({
 
   // Load first chunk immediately when manifest is ready
   useEffect(() => {
-    if (manifest && chunks[0]?.status === 'idle') {
-      loadChunk(0);
-    }
-  }, [manifest, chunks, loadChunk]);
+  if (!manifest) return;
+  const preload = Math.min(3, manifest.totalChunks);
+  for (let i = 0; i < preload; i++) {
+    if (chunks[i]?.status === 'idle') loadChunk(i);
+  }
+}, [manifest]); // runs once when manifest arrives
 
   // ── Virtualiser ────────────────────────────────────────────────────────────
   const parentRef = useRef<HTMLDivElement>(null);
@@ -467,31 +469,36 @@ export default function DocumentViewer({
 
   // ── Scroll to TOC section ─────────────────────────────────────────────────
   useEffect(() => {
-    if (!activeTocSectionId) return;
+  if (!activeTocSectionId) return;
 
-    loadUntilSection(activeTocSectionId).then(() => {
-      // Give React time to render newly loaded chunks
-      setTimeout(() => {
-        const el = document.getElementById(activeTocSectionId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          return;
-        }
+  const scrollToElement = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return true;
+    }
+    return false;
+  };
 
-        // Element not in DOM yet (virtualizer hasn't rendered it)
-        // Find its index and use virtualizer to bring it into view first
-        const sectionIndex = sections.findIndex((s) => s.id === activeTocSectionId);
-        if (sectionIndex !== -1) {
-          virtualizer.scrollToIndex(sectionIndex, { align: 'start', behavior: 'auto' });
-          // Then scroll the window to it after virtualizer renders
-          setTimeout(() => {
-            document.getElementById(activeTocSectionId)
-              ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 200);
+  // Fast path: element already in DOM (pre-loaded chunks cover this)
+  if (scrollToElement(activeTocSectionId)) return;
+
+  // Slow path: need to load the chunk first
+  loadUntilSection(activeTocSectionId).then(() => {
+    // Single rAF — waits for React to flush the new chunk into DOM
+    requestAnimationFrame(() => {
+      if (!scrollToElement(activeTocSectionId)) {
+        // Still not rendered (virtualizer hasn't measured it yet) — use index
+        const idx = sections.findIndex((s) => s.id === activeTocSectionId);
+        if (idx !== -1) {
+          virtualizer.scrollToIndex(idx, { align: 'start', behavior: 'smooth' });
+          // One more rAF for virtualizer to render the item
+          requestAnimationFrame(() => scrollToElement(activeTocSectionId));
         }
-      }, 100);
+      }
     });
-  }, [activeTocSectionId, sections, virtualizer, loadUntilSection]);
+  });
+}, [activeTocSectionId]);
 
   // ── onMatchFound ───────────────────────────────────────────────────────────
   useEffect(() => {

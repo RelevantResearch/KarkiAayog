@@ -299,6 +299,15 @@ export function useDocumentChunks(locale: string): UseDocumentChunksReturn {
         await Promise.all(loads);
     }, [manifest, loadChunk]);
 
+    const loadFirstN = useCallback(async (n: number) => {
+  const count = Math.min(n, manifest?.totalChunks ?? 0);
+  await Promise.all(
+    Array.from({ length: count }, (_, i) =>
+      chunks[i]?.status === 'idle' ? loadChunk(i) : Promise.resolve()
+    )
+  );
+}, [manifest, chunks, loadChunk]);
+
     // ── Load chunks up to the one containing a section ────────────────────────
     const loadUntilSection = useCallback(
         async (sectionId: string) => {

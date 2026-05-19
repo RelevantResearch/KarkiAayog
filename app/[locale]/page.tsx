@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DocumentViewer from '@/components/DocumentViewer';
 import ResultsCard from '@/components/ResultsCard';
 import TableOfContents from '@/components/TableOfContents';
-import { Search, Loader2, Languages, Keyboard, ChevronUp, X, List } from 'lucide-react';
+import { Search, Loader2, ChevronUp, X, List } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useDocumentChunks } from '@/hooks/useDocumentChunks';
 import { useTocIndex } from '@/hooks/useTocIndex';
@@ -31,19 +31,19 @@ export default function Home() {
   const { manifest, manifestStatus, chunks, sections, loadChunk, loadUntilSection } =
     useDocumentChunks(locale);
 
-  const [englishInput, setEnglishInput] = useState('');
-  const [nepaliInput, setNepaliInput] = useState('');
+  const [searchInputValue, setSearchInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [matches, setMatches] = useState<{ id: string; preview: string }[]>([]);
-  const [isTranslating, setIsTranslating] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [showNoResults, setShowNoResults] = useState(false);
   const [activeMatchId, setActiveMatchId] = useState<string | null>(null);
   const [activeTocSectionId, setActiveTocSectionId] = useState<string | null>(null);
-  const [inputMode, setInputMode] = useState<InputMode>('english');
+  const [inputMode, setInputMode] = useState<InputMode>('romanized');
   const [hasScrolled, setHasScrolled] = useState(false);
   const [floatingVisible, setFloatingVisible] = useState(false);
   const [showToc, setShowToc] = useState(true);
+  // Tracks whether the PramukhIME-controlled input has any value (uncontrolled input)
+  const [romanizedHasValue, setRomanizedHasValue] = useState(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -52,6 +52,9 @@ export default function Home() {
   const documentRef = useRef<HTMLDivElement>(null);
 
   const hasResults = matches.length > 0 && searchTerm.trim() !== '';
+
+  // canSearch: for English locale use a controlled input value; for Nepali always romanized (uncontrolled)
+  const canSearch = language === 'en' ? searchInputValue.trim() !== '' : romanizedHasValue;
 
   useEffect(() => {
     const stored = localStorage.getItem('showToc');
@@ -73,6 +76,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
+      if (scrollLockRef.current) return;
       const scrolled = window.scrollY > 100;
       setHasScrolled(scrolled);
       setFloatingVisible(scrolled);
@@ -81,83 +85,97 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollLockRef = useRef(false);
+  const scrollLockRafRef = useRef<number | null>(null);
+
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Instant jump — smooth scroll lets layout shifts from chunk loading win
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Hold scroll at 0 for ~600ms via rAF loop to counter chunk-load layout shifts
+    scrollLockRef.current = true;
+    const enforce = () => {
+      if (!scrollLockRef.current) return;
+      if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollLockRafRef.current = requestAnimationFrame(enforce);
+    };
+    scrollLockRafRef.current = requestAnimationFrame(enforce);
+
+    setTimeout(() => {
+      scrollLockRef.current = false;
+      if (scrollLockRafRef.current !== null) {
+        cancelAnimationFrame(scrollLockRafRef.current);
+        scrollLockRafRef.current = null;
+      }
+    }, 600);
   }, []);
 
-  useEffect(() => {
-    if (language === 'en') {
-      setEnglishInput('');
-      setNepaliInput('');
-    }
-  }, [language]);
+
 
   useEffect(() => {
-    setNepaliInput('');
+    setRomanizedHasValue(false);
     if (romanizedInputRef.current) romanizedInputRef.current.value = '';
   }, [inputMode]);
 
   useEffect(() => {
-    if (inputMode !== 'romanized' || !romanizedInputRef.current) return;
-    const tryEnable = () => {
-      if (!window.pramukhIME) return;
-      window.pramukhIME.addLanguage(window.PramukhIndic, 'nepali');
-      window.pramukhIME.enable('romanized-input', romanizedInputRef.current!);
-    };
-    if (window.pramukhIME) {
-      tryEnable();
-    } else {
-      const interval = setInterval(() => {
-        if (window.pramukhIME) { tryEnable(); clearInterval(interval); }
-      }, 100);
-      return () => clearInterval(interval);
-    }
-    return () => { window.pramukhIME?.disable('romanized-input'); };
-  }, [inputMode]);
+    if (language !== 'ne') return;
+    const el = romanizedInputRef.current;
+    if (!el) return;
 
-  useEffect(() => {
-    if (inputMode !== 'romanized') return;
-    const interval = setInterval(() => {
-      const el = romanizedInputRef.current;
-      if (el && el.value !== nepaliInput) setNepaliInput(el.value);
-    }, 100);
-    return () => clearInterval(interval);
-  }, [inputMode, nepaliInput]);
+    let interval: NodeJS.Timeout;
 
-  useEffect(() => {
-    if (language !== 'ne' || inputMode !== 'english' || !englishInput.trim()) return;
-    const id = setTimeout(async () => {
-      setIsTranslating(true);
+    const initIME = () => {
+      if (!window.pramukhIME) return false;
       try {
-        const res = await fetch('http://localhost:8002/translate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: englishInput, mode: 'translate' }),
-        });
-        const data = await res.json();
-        if (data.translatedText) setNepaliInput(data.translatedText);
-      } catch (err) {
-        console.error('Translation error:', err);
-      } finally {
-        setIsTranslating(false);
+        window.pramukhIME.addLanguage(window.PramukhIndic, 'nepali');
+        window.pramukhIME.enable('romanized-input', el);
+        return true;
+      } catch (e) {
+        console.error('PramukhIME init error:', e);
+        return false;
       }
-    }, 500);
-    return () => clearTimeout(id);
-  }, [englishInput, language, inputMode]);
+    };
+
+    if (!initIME()) {
+      interval = setInterval(() => { if (initIME()) clearInterval(interval); }, 200);
+    }
+
+    // MutationObserver + keyup both used because PramukhIME rewrites the DOM
+    // value directly, bypassing React's synthetic onInput/onChange events.
+    const syncValue = () => setRomanizedHasValue(el.value.trim() !== '');
+
+    const observer = new MutationObserver(syncValue);
+    observer.observe(el, { attributes: true, attributeFilter: ['value'] });
+    el.addEventListener('keyup', syncValue);
+    el.addEventListener('input', syncValue);
+
+    return () => {
+      clearInterval(interval);
+      observer.disconnect();
+      el.removeEventListener('keyup', syncValue);
+      el.removeEventListener('input', syncValue);
+      window.pramukhIME?.disable('romanized-input');
+    };
+  }, [language]);
+
+
 
   const handleSearch = async () => {
-    const term = language === 'en' ? englishInput : nepaliInput;
+    const term = language === 'en' ? searchInputValue : (romanizedInputRef.current?.value || '');
     if (!term.trim()) return;
+
     setIsSearching(true);
     setShowNoResults(false);
     setMatches([]);
     setActiveMatchId(null);
     setActiveTocSectionId(null);
+
     try {
       const res = await fetch(
         `${window.location.origin}/api/document/search?locale=${locale}&q=${encodeURIComponent(term)}`
       );
       const data = await res.json() as { matches: { id: string; preview: string }[] };
+
       setMatches(data.matches);
       setShowNoResults(data.matches.length === 0);
       setSearchTerm(term);
@@ -182,86 +200,50 @@ export default function Home() {
     setMatches([]);
     setShowNoResults(false);
     setActiveMatchId(null);
+    setSearchInputValue('');
+    setRomanizedHasValue(false);
+    if (romanizedInputRef.current) romanizedInputRef.current.value = '';
   };
 
-  const canSearch = language === 'en' ? englishInput.trim() !== '' : nepaliInput.trim() !== '';
   const isNepali = language === 'ne';
 
   const SearchCard = (
     <div className="bg-card rounded-xl border border-border p-5 shadow-sm">
-      {isNepali && (
-        <div className="flex gap-2 mb-4">
-          {(['english', 'romanized'] as InputMode[]).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setInputMode(mode)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${inputMode === mode
-                ? 'bg-orange-500 text-white border-orange-500'
-                : 'border-border text-muted-foreground hover:border-orange-400'
-                }`}
-            >
-              {mode === 'english'
-                ? <Languages className="h-3 w-3" />
-                : <Keyboard className="h-3 w-3" />}
-              {mode === 'english' ? 'English → नेपाली' : 'Romanized → नेपाली'}
-            </button>
-          ))}
-        </div>
-      )}
+
 
       <div className="space-y-3 mb-4">
-        {isNepali && inputMode === 'english' && (
-          <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
-              अंग्रेजीमा टाइप गर्नुहोस्
-            </label>
-            <input
-              type="text"
-              value={englishInput}
-              onChange={(e) => setEnglishInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && canSearch && !isSearching) handleSearch(); }}
-              placeholder="Type in English to auto-translate..."
-              className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-muted/40 focus:bg-background focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
-            />
-            {isTranslating && (
-              <p className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                अनुवाद गर्दै...
-              </p>
-            )}
-          </div>
-        )}
+
 
         <div>
           {isNepali && (
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">
-              {inputMode === 'english'
-                ? 'अनुवादित नेपाली पाठ (सम्पादन योग्य)'
-                : 'Roman अक्षरमा टाइप गर्नुहोस्'}
+              Roman अक्षरमा टाइप गर्नुहोस्
             </label>
           )}
-          <input
-            id={inputMode === 'romanized' ? 'romanized-input' : 'search-input'}
-            ref={inputMode === 'romanized' ? romanizedInputRef : undefined}
-            type="text"
-            value={inputMode !== 'romanized' ? (isNepali ? nepaliInput : englishInput) : undefined}
-            defaultValue={inputMode === 'romanized' ? '' : undefined}
-            onChange={(e) => {
-              if (inputMode !== 'romanized') {
-                isNepali ? setNepaliInput(e.target.value) : setEnglishInput(e.target.value);
-              }
-            }}
-            onKeyDown={(e) => { if (e.key === 'Enter' && canSearch && !isSearching) handleSearch(); }}
-            placeholder={
-              !isNepali
-                ? 'Enter search term...'
-                : inputMode === 'romanized'
-                  ? 'maile kaam garye → मैले काम गर्ये'
-                  : 'खोज शब्द प्रविष्ट गर्नुहोस्...'
-            }
-            className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-muted/40 focus:bg-background focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
-          />
-          {isNepali && inputMode === 'romanized' && (
+          {isNepali ? (
+            // Nepali: always romanized, managed by PramukhIME (uncontrolled)
+            <input
+              id="romanized-input"
+              ref={romanizedInputRef}
+              type="text"
+              defaultValue=""
+              onKeyDown={(e) => { if (e.key === 'Enter' && canSearch && !isSearching) handleSearch(); }}
+              placeholder="maile kaam garye → मैले काम गर्ये"
+              className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-muted/40 focus:bg-background focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+            />
+          ) : (
+            // English: plain controlled input
+            <input
+              id="search-input"
+              type="text"
+              value={searchInputValue}
+              onChange={(e) => setSearchInputValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && canSearch && !isSearching) handleSearch(); }}
+              placeholder="Enter search term..."
+              className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-muted/40 focus:bg-background focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+            />
+          )}
+          {isNepali && (
             <p className="text-xs text-muted-foreground mt-1.5">
               Type in Roman — converts to Devanagari live
             </p>

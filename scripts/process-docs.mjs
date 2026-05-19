@@ -24,12 +24,12 @@ import { fileURLToPath } from 'url';
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT      = '/var/www/KarkiAayog';          // project root
+const ROOT      = '/home/apocalypse/Freelance/KarkiAayog';          // project root
 
 const LOCALES    = ['en', 'ne'];                  // ← add/remove locales here
 const SOURCE_DIR = join(ROOT, 'data');            // ← where document.json lives now
 const OUTPUT_DIR = join(ROOT, 'public', 'data');  // ← must be under /public
-const CHUNK_SIZE = 50;                            // sections per chunk
+const CHUNK_SIZE = 300;                            // sections per chunk
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
