@@ -42,6 +42,7 @@ export default function Home() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [floatingVisible, setFloatingVisible] = useState(false);
   const [showToc, setShowToc] = useState(true);
+const [tocReady, setTocReady] = useState(false);
   // Tracks whether the PramukhIME-controlled input has any value (uncontrolled input)
   const [romanizedHasValue, setRomanizedHasValue] = useState(false);
 
@@ -56,10 +57,11 @@ export default function Home() {
   // canSearch: for English locale use a controlled input value; for Nepali always romanized (uncontrolled)
   const canSearch = language === 'en' ? searchInputValue.trim() !== '' : romanizedHasValue;
 
-  useEffect(() => {
-    const stored = localStorage.getItem('showToc');
-    if (stored !== null) setShowToc(stored === 'true');
-  }, []);
+ useEffect(() => {
+  const stored = localStorage.getItem('showToc');
+  if (stored !== null) setShowToc(stored === 'true');
+  setTocReady(true);
+}, []);
 
   const toggleToc = useCallback(() => {
     setShowToc((prev) => {

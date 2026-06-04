@@ -10,7 +10,6 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 
 import type { ChunkManifest, ChunkState, DocumentSection as HookDocumentSection } from '@/hooks/useDocumentChunks';
 import type { ListItem, ListType } from '@/types/types';
-import { Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 
@@ -266,13 +265,13 @@ function renderSection(
 
   switch (type) {
     case 'h1':
-      return <h1 id={id} className="text-3xl font-bold mt-8 mb-4 text-primary border-b border-border pb-2">{hl(content as string)}</h1>;
+      return <h1 id={id} className="scroll-mt-24 text-3xl font-bold mt-8 mb-4 text-primary border-b border-border pb-2">{hl(content as string)}</h1>;
     case 'h2':
-      return <h2 id={id} className="text-2xl font-semibold mt-6 mb-3 border-b border-border pb-2 text-primary">{hl(content as string)}</h2>;
+      return <h2 id={id} className="scroll-mt-24 text-2xl font-semibold mt-6 mb-3 border-b border-border pb-2 text-primary">{hl(content as string)}</h2>;
     case 'h3':
-      return <h3 id={id} className="text-xl font-semibold mt-5 mb-2 text-foreground">{hl(content as string)}</h3>;
+      return <h3 id={id} className="scroll-mt-24 text-xl font-semibold mt-5 mb-2 text-foreground">{hl(content as string)}</h3>;
     case 'h4':
-      return <h4 id={id} className="text-lg font-semibold mt-4 mb-2 text-foreground">{hl(content as string)}</h4>;
+      return <h4 id={id} className="scroll-mt-24 text-lg font-semibold mt-4 mb-2 text-foreground">{hl(content as string)}</h4>;
     case 'p':
       return <motion.p
         key={id}
@@ -380,12 +379,12 @@ export default function DocumentViewer({
 
   // Load first chunk immediately when manifest is ready
   useEffect(() => {
-  if (!manifest) return;
-  const preload = Math.min(3, manifest.totalChunks);
-  for (let i = 0; i < preload; i++) {
-    if (chunks[i]?.status === 'idle') loadChunk(i);
-  }
-}, [manifest]); // runs once when manifest arrives
+    if (!manifest) return;
+    const preload = Math.min(3, manifest.totalChunks);
+    for (let i = 0; i < preload; i++) {
+      if (chunks[i]?.status === 'idle') loadChunk(i);
+    }
+  }, [manifest]); // runs once when manifest arrives
 
   // ── Virtualiser ────────────────────────────────────────────────────────────
   const parentRef = useRef<HTMLDivElement>(null);
@@ -469,36 +468,36 @@ export default function DocumentViewer({
 
   // ── Scroll to TOC section ─────────────────────────────────────────────────
   useEffect(() => {
-  if (!activeTocSectionId) return;
+    if (!activeTocSectionId) return;
 
-  const scrollToElement = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return true;
-    }
-    return false;
-  };
-
-  // Fast path: element already in DOM (pre-loaded chunks cover this)
-  if (scrollToElement(activeTocSectionId)) return;
-
-  // Slow path: need to load the chunk first
-  loadUntilSection(activeTocSectionId).then(() => {
-    // Single rAF — waits for React to flush the new chunk into DOM
-    requestAnimationFrame(() => {
-      if (!scrollToElement(activeTocSectionId)) {
-        // Still not rendered (virtualizer hasn't measured it yet) — use index
-        const idx = sections.findIndex((s) => s.id === activeTocSectionId);
-        if (idx !== -1) {
-          virtualizer.scrollToIndex(idx, { align: 'start', behavior: 'smooth' });
-          // One more rAF for virtualizer to render the item
-          requestAnimationFrame(() => scrollToElement(activeTocSectionId));
-        }
+    const scrollToElement = (id: string) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return true;
       }
+      return false;
+    };
+
+    // Fast path: element already in DOM (pre-loaded chunks cover this)
+    if (scrollToElement(activeTocSectionId)) return;
+
+    // Slow path: need to load the chunk first
+    loadUntilSection(activeTocSectionId).then(() => {
+      // Single rAF — waits for React to flush the new chunk into DOM
+      requestAnimationFrame(() => {
+        if (!scrollToElement(activeTocSectionId)) {
+          // Still not rendered (virtualizer hasn't measured it yet) — use index
+          const idx = sections.findIndex((s) => s.id === activeTocSectionId);
+          if (idx !== -1) {
+            virtualizer.scrollToIndex(idx, { align: 'start', behavior: 'smooth' });
+            // One more rAF for virtualizer to render the item
+            requestAnimationFrame(() => scrollToElement(activeTocSectionId));
+          }
+        }
+      });
     });
-  });
-}, [activeTocSectionId]);
+  }, [activeTocSectionId]);
 
   // ── onMatchFound ───────────────────────────────────────────────────────────
   useEffect(() => {

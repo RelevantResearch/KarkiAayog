@@ -1,21 +1,3 @@
-/**
- * process-docs.mjs
- *
- * Pre-processes large document JSON files into:
- *   1. Chunked files:      /public/data/{locale}/document.chunk.{n}.json
- *   2. Search index:       /public/data/{locale}/search-index.json
- *   3. Manifest:           /public/data/{locale}/document.manifest.json
- *
- * Usage:
- *   node scripts/process-docs.mjs
- *   bun scripts/process-docs.mjs
- *
- * Config (edit below):
- *   LOCALES         your locale codes
- *   SOURCE_DIR      where your current JSON files live
- *   OUTPUT_DIR      where chunked files should go (must be under /public for static export)
- *   CHUNK_SIZE      sections per chunk (50 is a good default)
- */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
@@ -24,7 +6,7 @@ import { fileURLToPath } from 'url';
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT      = '/home/apocalypse/Freelance/KarkiAayog';          // project root
+const ROOT      = '/var/www/KarkiAayog';          // project root
 
 const LOCALES    = ['en', 'ne'];                  // ← add/remove locales here
 const SOURCE_DIR = join(ROOT, 'data');            // ← where document.json lives now
